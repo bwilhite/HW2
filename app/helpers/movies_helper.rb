@@ -12,6 +12,7 @@ module MoviesHelper
       'hilite'
     else
       ''
+    end
   end
 
   def was_checked?(rating)
