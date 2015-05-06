@@ -1,12 +1,24 @@
 -#  This file is app/views/movies/index.html.haml
 %h1 All Movies
 
+-#form added as per pastebin for hw2
+= form_tag movies_path, method: :get do
+  Include:
+  - @all_ratings.each do |rating|
+    = rating
+    %input{type: 'checkbox', name: "ratings[]", id: "ratings_#{rating}", value: "#{rating}", checked: was_checked?(rating)}
+  %input#ratings_submit{type: 'submit', value: 'Refresh'}
+
 %table#movies
   %thead
     %tr
-      %th Movie Title
+      -#added highlight by using an if then else loop, for once, haml is awesome
+      %th{class: was_highlighted?('title')}
+        -# note  helper method seriously, future brighid, all hail helper methodz
+        = link_to 'Movie Title', movies_path(create_order_params 'title'), id: 'title_header'
       %th Rating
-      %th Release Date
+      %th{class: was_highlighted?('release_date')}
+        = link_to 'Release Date', movies_path(create_order_params 'release_date'), id: 'release_date_header'
       %th More Info
   %tbody
     - @movies.each do |movie|

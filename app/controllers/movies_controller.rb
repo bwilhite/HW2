@@ -7,7 +7,29 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @movies = Movie.all
+
+    #HW2 added lines to sort by order_by and to filter by the selected ratings
+    @all_ratings = Movie.get_ratings
+    #moved ordered by out to abstract a bit, not sure if that was the right decision
+    @ordered_by = params[:order_by] if params.has_key? 'order_by'
+
+    #rating filter happens first
+    if params.has_key? 'ratings'
+      @checked_ratings = params[:ratings]
+
+      #posibility of being checked, was outside with two different if/elsif, but that seemed redundant, not sure if I've tested all the possibilities though
+      if @ordered_by
+        #using both in one--not sure this is kosher....
+        @movies = Movie.find_all_by_rating(@checked_ratings, :order => "#{@ordered_by} asc")
+      else
+        @movies = Movie.find_all_by_rating(@checked_ratings)
+      end
+    elsif @ordered_by
+      @movies = Movie.all(:order => "#{@ordered_by} asc")
+    else
+      @movies = Movie.all
+    end
+
   end
 
   def new
